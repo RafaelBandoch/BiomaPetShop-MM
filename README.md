@@ -27,47 +27,48 @@ O sistema abrange o controle completo das seguintes entidades:
 
 ---
 
-## 2. Funcionalidades Principais
+## 2. Requisitos do Sistema
 
-### Autenticação e Controle de Acesso
-- Autenticação com Login e Logout para controle de sessão.
-- Perfis de acesso diferenciados (Administrador e Atendente).
-- Proteção de rotas internas acessíveis apenas por usuários autenticados.
+### 2.1. Requisitos Funcionais (RF)
 
-### Gestão de Clientes
-- Operações completas de CRUD (Cadastro, Listagem, Edição e Exclusão).
-- Validação de e-mail e telefone únicos para prevenir registros duplicados.
-- Exibição da lista de pets vinculados ao perfil de cada cliente.
+- **[RF01] Autenticar Usuário:** O sistema deve permitir que usuários realizem login informando e-mail e senha, além de oferecer a funcionalidade de encerramento da sessão (logout).
+- **[RF02] Gerenciar Usuários:** O sistema deve permitir o cadastro e a gestão de usuários com perfis de acesso distintos (Administrador e Atendente).
+- **[RF03] Proteção de Rotas:** O sistema deve restringir o acesso às páginas e rotas internas, exigindo autenticação prévia.
+- **[RF04] Cadastrar Cliente:** O sistema deve permitir o cadastro de clientes com nome, e-mail e telefone.
+- **[RF05] Listar e Visualizar Clientes:** O sistema deve listar todos os clientes cadastrados e exibir o detalhamento de suas informações.
+- **[RF06] Editar e Excluir Cliente:** O sistema deve permitir a atualização e remoção dos dados dos clientes.
+- **[RF07] Visualizar Pets do Cliente:** O sistema deve exibir no detalhamento do cliente a lista de pets associados ao seu cadastro.
+- **[RF08] Cadastrar Pet:** O sistema deve permitir cadastrar pets vinculados a um cliente, registrando nome, espécie, raça, porte (pequeno, médio ou grande) e observações.
+- **[RF09] Editar e Excluir Pet:** O sistema deve permitir a edição e a remoção de um registro de pet.
+- **[RF10] Cadastrar e Editar Serviços:** O sistema deve permitir o cadastro e alteração de serviços com nome, duração estimada em minutos e tabela de preços por porte.
+- **[RF11] Listar Serviços:** O sistema deve apresentar a lista de serviços cadastrados com seus respectivos valores.
+- **[RF12] Criar Agendamento:** O sistema deve permitir a criação de agendamentos associando cliente, pet, data/hora e um ou múltiplos serviços.
+- **[RF13] Calcular Valor Total do Agendamento:** O sistema deve calcular automaticamente o valor final com base na soma dos preços dos serviços de acordo com o porte do pet.
+- **[RF14] Alterar Status do Agendamento:** O sistema deve permitir atualizar o status do atendimento entre Agendado, Concluído e Cancelado.
+- **[RF15] Cancelar e Reagendar:** O sistema deve permitir o cancelamento e a alteração de data/hora de agendamentos existentes.
+- **[RF16] Filtrar Agendamentos:** O sistema deve permitir a filtragem de agendamentos com base no status.
+- **[RF17] Exibir Métricas no Dashboard:** O sistema deve exibir no painel principal os totais consolidados do dia (agendamentos, clientes, pets e serviços).
+- **[RF18] Exibir Listagens Recentes:** O sistema deve apresentar no dashboard as listas de clientes cadastrados e agendamentos recentes.
 
-### Gestão de Pets
-- Cadastro de pets associados ao cliente.
-- Armazenamento de informações detalhadas: nome, espécie, raça, porte (pequeno, médio ou grande) e observações.
-- Exclusão em cascata dos agendamentos e registros vinculados ao pet.
+### 2.2. Requisitos Não Funcionais (RNF)
 
-### Gestão de Serviços
-- Cadastro e edição de serviços do estabelecimento.
-- Tabela de preços diferenciada por porte do pet e definição da duração estimada em minutos.
-
-### Agendamentos (Transação Principal)
-- Criação de agendamentos associando cliente, pet, data/hora e múltiplos serviços.
-- Cálculo automático do valor total com base nos preços dos serviços e no porte do pet.
-- Controle do ciclo de vida do agendamento através dos status: Agendado, Concluído e Cancelado.
-- Reagendamento e cancelamento de horários.
-- Filtro por status na visualização geral.
-
-### Dashboard e Relatórios
-- Apresentação de métricas diárias (totais de agendamentos, clientes, pets e serviços).
-- Listagem dos clientes cadastrados e exibição dos agendamentos mais recentes.
+- **[RNF01] Padrão Arquitetural:** O sistema deve utilizar a arquitetura Model-View-Controller (MVC) para separação de responsabilidades.
+- **[RNF02] Renderização no Servidor (SSR):** A interface da aplicação deve ser renderizada do lado do servidor utilizando EJS como template engine.
+- **[RNF03] Banco de Dados Relacional:** O sistema deve utilizar o banco de dados relacional SQLite para persistência dos dados.
+- **[RNF04] Criptografia de Credenciais:** As senhas dos usuários devem ser armazenadas obrigatoriamente utilizando hashing seguro (bcrypt).
+- **[RNF05] Interface e Usabilidade:** O layout e o fluxo da aplicação devem seguir a especificação e prototipagem definida no Figma.
+- **[RNF06] Hospedagem:** A aplicação deve estar publicada e acessível em ambiente de nuvem na plataforma Render.
 
 ---
 
 ## 3. Regras de Negócio (RN)
 
-1. Unicidade de Dados de Contato: O e-mail e o telefone informados no cadastro do cliente devem ser únicos no banco de dados.
-2. Limite de Capacidade por Horário: Não é permitido registrar mais de 3 (três) agendamentos para a mesma tarefa/serviço no mesmo horário.
-3. Validação de Agendamento do Pet: O mesmo pet não pode ter agendamentos sobrepostos para os mesmos serviços na mesma data e horário.
-4. Dependência de Serviços: Os serviços de Tosa e Hidratação dependem obrigatoriamente do agendamento conjunto do serviço de Banho.
-5. Privilégios do Administrador: A visualização de senhas e a exclusão de usuários do sistema são restritas ao perfil de Administrador.
+- **[RN01] Unicidade de Dados de Contato:** O e-mail e o telefone informados no cadastro do cliente devem ser únicos no banco de dados.
+- **[RN02] Limite de Agendamentos por Horário:** Não é permitido registrar mais de 3 (três) agendamentos para o mesmo serviço no mesmo horário.
+- **[RN03] Validação de Conflito de Agendamento:** O mesmo pet não pode ter agendamentos sobrepostos para os mesmos serviços na mesma data e horário.
+- **[RN04] Dependência de Serviços:** Os serviços de Tosa e Hidratação possuem o serviço de Banho como pré-requisito obrigatório.
+- **[RN05] Exclusão em Cascata (Pets):** A exclusão de um registro de Pet deve remover em cascata todos os agendamentos vinculados a ele.
+- **[RN06] Privilégios Administrativos:** Apenas usuários com perfil Administrador podem visualizar dados sensíveis de senha e realizar a exclusão de usuários do sistema.
 
 ---
 
