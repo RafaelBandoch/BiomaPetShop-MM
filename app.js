@@ -31,7 +31,7 @@ app.use(
       db: 'sessions.sqlite',
       dir: './database'
     }),
-    secret: process.env.SESSION_SECRET || 'petagenda_fallback_secret',
+    secret: process.env.SESSION_SECRET || 'biomapet_fallback_secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -60,12 +60,12 @@ app.get('/', (req, res) => {
 });
 
 app.delete('/usuarios/:id', verificarAutenticacao, async (req, res) => {
-  if (!req.session.usuario || req.session.usuario.email !== 'admin@petagenda.com') {
+  if (!req.session.usuario || req.session.usuario.email !== 'admin@biomapet.com') {
     return res.json({ ok: false, erro: 'sem_permissao' });
   }
   try {
     const row = await dbGet('SELECT email FROM usuarios WHERE id = ?', [req.params.id]);
-    if (row && row.email === 'admin@petagenda.com') {
+    if (row && row.email === 'admin@biomapet.com') {
       return res.json({ ok: false, erro: 'nao_pode_excluir_admin' });
     }
     await dbRun('DELETE FROM usuarios WHERE id = ?', [req.params.id]);

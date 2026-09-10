@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.join(__dirname, 'petagenda.sqlite');
+const dbPath = path.join(__dirname, 'biomapet.sqlite');
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {

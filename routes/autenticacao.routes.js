@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/login', (req, res) => {
   if (req.session.usuario) return res.redirect('/dashboard');
   res.render('autenticacao/login', {
-    title: 'Login - PetAgenda',
+    title: 'Login - Bioma Pet',
     erro: null,
     sucesso: null,
     cadastrado: req.query.cadastrado === '1'
@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
 
   if (!email || !senha) {
     return res.render('autenticacao/login', {
-      title: 'Login - PetAgenda',
+      title: 'Login - Bioma Pet',
       erro: 'Preencha email e senha.',
       sucesso: null,
       cadastrado: false
@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
 
     if (!usuario) {
       return res.render('autenticacao/login', {
-        title: 'Login - PetAgenda',
+        title: 'Login - Bioma Pet',
         erro: 'Email ou senha inválidos.',
         sucesso: null,
         cadastrado: false
@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
 
     if (!senhaValida) {
       return res.render('autenticacao/login', {
-        title: 'Login - PetAgenda',
+        title: 'Login - Bioma Pet',
         erro: 'Email ou senha inválidos.',
         sucesso: null,
         cadastrado: false
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
     const funcRow = await dbGet('SELECT ativo FROM funcionarios WHERE usuario_id = ?', [usuario.id]);
     if (funcRow && funcRow.ativo === 0) {
       return res.render('autenticacao/login', {
-        title: 'Login - PetAgenda',
+        title: 'Login - Bioma Pet',
         erro: 'Usuário Inativo.',
         sucesso: null,
         cadastrado: false
@@ -71,7 +71,7 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error('Erro no login:', err);
     res.render('autenticacao/login', {
-      title: 'Login - PetAgenda',
+      title: 'Login - Bioma Pet',
       erro: 'Erro interno no servidor.',
       sucesso: null,
       cadastrado: false

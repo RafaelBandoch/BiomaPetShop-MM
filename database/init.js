@@ -128,7 +128,7 @@ db.serialize(async () => {
 
   const senhaHash = await bcrypt.hash('123456', 10);
 
-  db.get('select * from usuarios where email = ?', ['admin@petagenda.com'], (err, row) => {
+  db.get('select * from usuarios where email = ?', ['admin@biomapet.com'], (err, row) => {
     if (err) {
       console.error('Erro ao buscar usuário:', err.message);
       return;
@@ -137,7 +137,7 @@ db.serialize(async () => {
     if (!row) {
       db.run(
         'insert into usuarios (nome, email, senha, permissoes) values (?, ?, ?, ?)',
-        ['Administrador', 'admin@petagenda.com', senhaHash, 'administrador'],
+        ['Administrador', 'admin@biomapet.com', senhaHash, 'administrador'],
         (insertErr) => {
           if (insertErr) {
             console.error('Erro ao inserir usuário inicial:', insertErr.message);
