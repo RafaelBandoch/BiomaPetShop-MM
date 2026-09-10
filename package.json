@@ -1,5 +1,5 @@
 {
-  "name": "petagenda",
+  "name": "biomapet",
   "version": "1.0.0",
   "description": "Sistema web de agendamento para pet shop",
   "main": "app.js",
