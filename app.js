@@ -18,6 +18,17 @@ const { verificarAutenticacao } = require('./middlewares/autenticacao');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Sem segredo nao ha sessao confiavel: falha no boot em vez de assinar
+// os cookies com um valor previsivel.
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET) {
+  console.error(
+    'SESSION_SECRET nao definida. Copie o .env.example para .env e defina um valor ' +
+    'aleatorio antes de iniciar o servidor.'
+  );
+  process.exit(1);
+}
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -31,7 +42,7 @@ app.use(
       db: 'sessions.sqlite',
       dir: './database'
     }),
-    secret: process.env.SESSION_SECRET || 'biomapet_fallback_secret',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Sistema web de agendamento para pet shop",
   "main": "app.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon --quiet app.js",
