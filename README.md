@@ -87,44 +87,90 @@ O sistema foi estruturado seguindo o padrão arquitetural MVC (Model-View-Contro
 
 ## 5. Estrutura de Diretórios
 ```
-BiomaPetShop-MM/
-├── src/
-│   ├── controllers/   # Regras de controle e lógica das rotas
-│   ├── models/        # Acesso e queries ao banco de dados SQLite
-│   ├── routes/        # Mapeamento e definição das rotas do sistema
-│   └── views/         # Interfaces e páginas renderizadas via EJS
-├── public/            # Arquivos estáticos (CSS, imagens, scripts client-side)
-├── database/          # Arquivos de migração ou script do banco de dados
-├── app.js             # Arquivo principal e ponto de entrada da aplicação
-└── package.json       # Gerenciamento de dependências e scripts do projeto
-````
+bioma-manutencao/
+├── app.js             # Ponto de entrada: sessão, middlewares, dashboard
+├── routes/            # Rotas do sistema (roteamento, validação e queries)
+├── views/             # Páginas renderizadas via EJS, organizadas por domínio
+├── middlewares/       # Proteção de rotas e verificação de perfil
+├── utils/             # Funções auxiliares e cálculos de negócio
+├── database/          # Conexão, schema (init.js) e arquivos .sqlite
+├── public/            # Arquivos estáticos (CSS e imagens)
+├── testes/            # Testes automatizados (Jest)
+├── docs/              # Documentação técnica do projeto
+└── package.json       # Dependências e scripts do projeto
+```
+
+> O projeto segue o padrão MVC de forma parcial: não existem camadas separadas de
+> `controllers` e `models` — a lógica e as queries vivem nos arquivos de `routes/`.
+> Essa divergência está registrada em [docs/debitos-tecnicos.md](docs/debitos-tecnicos.md).
+
+---
+
+## 5.1. Documentação Técnica
+
+| Documento | Conteúdo |
+|---|---|
+| [docs/DER.md](docs/DER.md) | Modelo de dados: entidades, colunas, relacionamentos e integridade referencial |
+| [docs/debitos-tecnicos.md](docs/debitos-tecnicos.md) | Inventário de débitos técnicos com severidade, impacto e correção sugerida |
+| [docs/handoff.md](docs/handoff.md) | Passagem de bastão: como rodar, mapa de rotas, decisões de projeto e próximos passos |
+
 ---
 
 ## 6. Instruções para Execução Local
 
 ### Pré-requisitos
-- Node.js instalado na máquina.
+- Node.js 20 ou superior (o arquivo `.nvmrc` fixa a versão 22).
 - Git instalado.
 
 ### Passo a Passo
 
 1. Clonar o repositório do projeto:
+   ```bash
    git clone https://github.com/RafaelBandoch/BiomaPetShop-MM.git
-
-2. Navegar para a pasta do repositório:
    cd BiomaPetShop-MM
+   ```
 
-3. Instalar as dependências do projeto:
+2. Instalar as dependências do projeto:
+   ```bash
    npm install
+   ```
+
+3. Configurar as variáveis de ambiente:
+   ```bash
+   cp .env.example .env
+   ```
+   Gere um valor aleatório para `SESSION_SECRET` e edite o `.env`:
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
+   > **A aplicação não inicia sem `SESSION_SECRET`.** É proposital: sem segredo
+   > definido, o servidor falha no boot em vez de assinar os cookies de sessão com
+   > um valor previsível.
 
 4. Iniciar o servidor da aplicação:
-   npm start
-
-   Para executar em ambiente de desenvolvimento (com auto-reload):
-   npm run dev
+   ```bash
+   npm start          # produção
+   npm run dev        # desenvolvimento, com auto-reload
+   ```
 
 5. Acessar no navegador:
-   Abra o endereço http://localhost:3000 (ou a porta configurada no ambiente).
+   Abra o endereço http://localhost:3000 (ou a porta definida em `PORT`).
+
+   Credenciais criadas automaticamente no primeiro boot:
+   `admin@biomapet.com` / `123456` — troque antes de publicar em qualquer ambiente.
+
+### Executar os testes
+```bash
+npm test
+```
+
+### Executar via Docker
+```bash
+docker build -t biomapet .
+docker run -p 3000:3000 -e SESSION_SECRET=<valor> -v biomapet-data:/app/database biomapet
+```
+O volume em `/app/database` é obrigatório: sem ele, o banco SQLite se perde a cada
+recriação do container.
 
 ---
 
